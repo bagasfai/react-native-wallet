@@ -1,17 +1,18 @@
+import { API_URL } from "@/constants/api";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
 
 // Replace '192.168.x.x' with your computer's local IP address on the same network as your device/emulator
-const API_URL = "http://localhost:5001/api";
+// const API_URL = "http://192.168.28.44:5001/api";
 
 export const useTransaction = (userId: string) => {
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({
     balance: 0,
     income: 0,
-    expenses: 0,
+    expense: 0,
   });
-  const [isloading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // useCallback for performance reasons, it will memoize the function
   const fetchTransactions = useCallback(async () => {
@@ -47,9 +48,10 @@ export const useTransaction = (userId: string) => {
       setIsLoading(false);
     }
   }, [fetchTransactions, fetchSummary, userId]);
+
   const deleteTransaction = async (id: number) => {
     try {
-      const response = await fetch(`${API_URL}/transactions/${userId}/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${API_URL}/transactions/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error("Failed to delete transaction");
 
       // refresh data after deletion
@@ -65,7 +67,7 @@ export const useTransaction = (userId: string) => {
   return {
     transactions,
     summary,
-    isloading,
+    isLoading,
     loadData,
     deleteTransaction,
   }
