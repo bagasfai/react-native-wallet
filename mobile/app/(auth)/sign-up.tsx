@@ -35,8 +35,14 @@ export default function SignUpScreen() {
       // Set 'pendingVerification' to true to display second form
       // and capture OTP code
       setPendingVerification(true);
-    } catch (err: any) {
-      if (err.errors?.[0]?.code === "form_identifier_exists") {
+    } catch (err) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "errors" in err &&
+        Array.isArray((err as any).errors) &&
+        (err as any).errors[0]?.code === "form_identifier_exists"
+      ) {
         setError("The email is already in use. Please try another.");
       } else {
         setError("An error occurred. Please try again.");

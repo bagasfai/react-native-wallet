@@ -36,8 +36,14 @@ export default function Page() {
         // complete further steps.
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
-    } catch (err: any) {
-      if (err.errors?.[0]?.code === "form_password_incorrect") {
+    } catch (err) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "errors" in err &&
+        Array.isArray((err as any).errors) &&
+        (err as any).errors[0]?.code === "form_password_incorrect"
+      ) {
         setError("Password is incorrect. Please try again.");
       } else {
         setError("An error occurred. Please try again.");
